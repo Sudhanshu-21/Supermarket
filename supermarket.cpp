@@ -62,7 +62,7 @@ map<int, item> mp;
 void displayItem(int c){
     auto i = mp.find(c);
     
-    cout<<"\t"<<i->first<<"\t\t"<<i->second.getName()<<"\t\t"<<i->second.getStock()<<"\t\t"<<i->second.getPrice()<<"\t\t"<<i->second.getDiscount()<<endl;
+    cout<<"\t\t\t"<<i->first<<"\t\t\t"<<i->second.getName()<<"\t\t\t"<<i->second.getStock()<<"\t\t\t"<<i->second.getPrice()<<"\t\t\t"<<i->second.getDiscount()<<endl;
 }
 
 
@@ -117,7 +117,7 @@ class customer{
     int age;
     string num;
     string address;
-    list<order> orders;
+    order orders;
 
     public:
     customer(){
@@ -131,7 +131,7 @@ class customer{
         age = Age;
         num = Num;
         address = add;
-        orders.push_back(id);
+        orders = id;
     }
     string getName(){
         return name;
@@ -145,7 +145,7 @@ class customer{
     string getAdd(){
         return address;
     }
-    list<order> getOrder(){
+    order getOrder(){
         return orders;
     }
     void printReciept();
@@ -168,7 +168,7 @@ class supermarket{
     customer user;
 
     bool administrator();
-    void guest();
+    bool guest();
     void display(){
         
         cout<<"____Welcome to Supermarket____"<<endl;
@@ -187,7 +187,9 @@ class supermarket{
                 break;
 
             case 2:
-                guest();
+                if(bool() == true){
+                    goto start;
+                }
                 break;
 
             case 3:
@@ -251,7 +253,7 @@ bool supermarket :: administrator(){
 }
 
 
-void supermarket :: guest(){
+bool supermarket :: guest(){
     cout<<"Provide Customer Details"<<endl;
                 cout<<"Name: ";
                 cin>>cn;
@@ -265,7 +267,7 @@ void supermarket :: guest(){
                 
                 select:
                 cout<<"____List of Items___"<<endl;
-                cout<<"\tCode\tname\tStock\tPrice\tDiscount"<<endl;
+                cout<<"\t\t\tCode\t\t\tname\t\t\tStock\t\t\tPrice\t\t\tDiscount"<<endl;
                 for(auto i:mp){
                     displayItem(i.first);
                 }
@@ -301,6 +303,7 @@ void supermarket :: guest(){
                             cout<<"Proceeding to checkout"<<endl;
                             user.login(cn, ca, cmob, cadd, id);
                             user.printReciept();
+                            return true;
                         }
                     }
                     else{
@@ -322,12 +325,13 @@ void admin :: add(){
     int s; 
     float p;
     float d;
+    add:
     cout<<"Enter product code"<<endl;
     cin>>c;
     auto it = mp.find(c);
     if(it != mp.end()){
         cout<<"Product is already added"<<endl;
-        cout<<"\tCode\tname\tStock\tPrice\tDiscount"<<endl;
+        cout<<"\t\t\tCode\ttname\t\tStock\t\tPrice\t\tDiscount"<<endl;
         displayItem(it->first);
         cout<<"If you want to modify this item press y"<<endl;
         char y;
@@ -337,6 +341,8 @@ void admin :: add(){
         }
         else{
             cout<<"Operation terminated"<<endl;
+            cout<<"Enter another product"<<endl;
+            goto add;
         }
     }
     cout<<"Enter product name"<<endl;
@@ -438,23 +444,6 @@ void admin :: remove(int c){
 }
 
 
-// void admin :: changePassword(){
-//         cout<<"Enter old password: ";
-//         string pass;
-//         cin>>pass;
-//         if(pass == adminPassword){
-//             cout<<"Enter new password: ";
-//             string p;
-//             cin>>p;
-//             adminPassword = p;
-//         }
-//         else{
-//             cout<<"Oops! Incorrect password"<<endl;
-//             cout<<"Action terminated"<<endl;
-//         }
-//     }
-
-
 void customer :: printReciept(){
     float total = 0;
     float amount = 0;
@@ -463,12 +452,12 @@ void customer :: printReciept(){
     cout<<"Age: "<<age<<endl;
     cout<<"Mobile Number: "<<num<<endl;
     cout<<"Address: "<<address<<endl<<endl;
-    cout<<"\tCode\tname\tPrice\tDiscount\tQuantity\tAmount"<<endl;
-    list<pair<int, int>> temp = getOrder().back().items;
+    cout<<"\t\tCode\t\tname\t\t\tPrice\t\tDiscount\t\tQuantity\t\tAmount"<<endl;
+    list<pair<int, int>> temp = getOrder().items;
     for(auto i : temp){
         amount = calculate(i.first, i.second);
         total+=amount;
-        cout<<"\t"<<i.first<<"\t\t"<<mp[i.first].getName()<<"\t\t"<<mp[i.first].getPrice()<<"\t\t"<<mp[i.first].getDiscount()<<"\t\t"<<i.second<<"\t\t"<<amount<<endl;
+        cout<<"\t\t"<<i.first<<"\t\t\t"<<mp[i.first].getName()<<"\t\t\t"<<mp[i.first].getPrice()<<"\t\t\t"<<mp[i.first].getDiscount()<<"\t\t\t"<<i.second<<"\t\t\t"<<amount<<endl;
     }
     cout<<"\tTotal Amount:\t\t\t\t\t\t\t\t\t"<<total<<endl;
     cout<<"ThankYou for shopping from us!"<<endl;
@@ -487,7 +476,7 @@ float customer :: calculate(int c, int q){
 
 int main(){
     item i1, i2;
-    i1.setItem(1, "Pencil", 10, 55.5, 4.5); 
+    i1.setItem(1, "Pencil", 10, 55, 4.5); 
     mp[1]=i1;                              
     i2.setItem(2, "Pen", 5, 40, 7.5);     
     mp[2]=i2;      

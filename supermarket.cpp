@@ -149,7 +149,7 @@ class customer{
         return orders;
     }
     void printReciept();
-    float calculate(item items, int q);
+    float calculate(int c, int q);
 };
 
 
@@ -262,7 +262,7 @@ void supermarket :: guest(){
                 cout<<"Address: ";
                 cin>>cadd;
                 cout<<"-------"<<endl;
-                user.login(cn, ca, cmob, cadd, id);
+                
                 select:
                 cout<<"____List of Items___"<<endl;
                 cout<<"\tCode\tname\tStock\tPrice\tDiscount"<<endl;
@@ -276,7 +276,7 @@ void supermarket :: guest(){
                     int quant;
                     cin>>quant;
                     if(quant<=mp[code].getStock()){
-                        user.getOrder().back().addItems(code, quant);
+                        id.addItems(code, quant);
                         //user.id.addItems(mp[code], quant);
                         
                         // -------------------------------STOCK update--------------------------------------
@@ -291,7 +291,7 @@ void supermarket :: guest(){
                         else if(more == 'n'){
                             cout<<"Enter the code of item to be removed"<<endl;
                             cin>>ri;
-                            user.getOrder().back().removeItems(ri);
+                            id.removeItems(ri);
                             a.updateStock(mp[ri].getStock()+quant, ri);
                             cout<<mp[ri].getName()<<" removed from your list"<<endl;
                             goto check;
@@ -299,6 +299,7 @@ void supermarket :: guest(){
                         else{
                             //-----------------------CHECKOUT------------------------------------------------
                             cout<<"Proceeding to checkout"<<endl;
+                            user.login(cn, ca, cmob, cadd, id);
                             user.printReciept();
                         }
                     }
@@ -464,21 +465,20 @@ void customer :: printReciept(){
     cout<<"Address: "<<address<<endl<<endl;
     cout<<"\tCode\tname\tPrice\tDiscount\tQuantity\tAmount"<<endl;
     list<pair<int, int>> temp = getOrder().back().items;
-    cout<<temp.front().first<<endl;
     for(auto i : temp){
-        // amount = calculate(i.first, i.second);
-        // total+=amount;
-        // cout<<"\t\t"<<i.first.getCode()<<"\t\t"<<i.first.getName()<<"\t\t"<<i.first.getPrice()<<"\t\t"<<i.first.getDiscount()<<"\t\t"<<i.second<<"\t\t"<<amount;
+        amount = calculate(i.first, i.second);
+        total+=amount;
+        cout<<"\t"<<i.first<<"\t\t"<<mp[i.first].getName()<<"\t\t"<<mp[i.first].getPrice()<<"\t\t"<<mp[i.first].getDiscount()<<"\t\t"<<i.second<<"\t\t"<<amount<<endl;
     }
     cout<<"\tTotal Amount:\t\t\t\t\t\t\t\t\t"<<total<<endl;
     cout<<"ThankYou for shopping from us!"<<endl;
 }
 
 
-float customer :: calculate(item items, int q){
+float customer :: calculate(int c, int q){
         float amount = 0;
-        float dis = items.getDiscount();
-        float pr = items.getPrice();
+        float dis = mp[c].getDiscount();
+        float pr = mp[c].getPrice();
         float price = pr*(1 - (float)(dis/100));
         amount = price*q;
         return amount;
@@ -490,7 +490,13 @@ int main(){
     i1.setItem(1, "Pencil", 10, 55.5, 4.5); 
     mp[1]=i1;                              
     i2.setItem(2, "Pen", 5, 40, 7.5);     
-    mp[2]=i2;                          
+    mp[2]=i2;      
+    customer cust;
+    order ord;
+    ord.addItems(1, 2);
+    ord.addItems(2, 2);
+    cust.login("sud", 34, "34566", "hhdf", ord);   
+    cust.printReciept();            
     supermarket sp;
     sp.display();
 

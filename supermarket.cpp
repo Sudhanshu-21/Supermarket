@@ -104,8 +104,7 @@ class order {
         items.push_back(product);
     }
     void removeItems(int code){
-        items.remove_if([code](const std::pair<int, int>& p) {
-            
+        items.remove_if([code](const std::pair<int, int>& p) {           
             return p.first == code;
         });        
     }
@@ -170,13 +169,14 @@ class supermarket{
     bool administrator();
     bool guest();
     void display(){
-        
-        cout<<"____Welcome to Supermarket____"<<endl;
+        cout<<"\t\t\t**********************************************************\n\n";
+        cout<<"\t\t\t\t\t____Welcome to Supermarket____"<<endl;
+        cout<<"\n\t\t\t**********************************************************\n";
         start:
-        cout<<"Select your Identity"<<endl;
-        cout<<"1) Administrator"<<endl;
-        cout<<"2) Costumer"<<endl;
-        cout<<"3) Exit"<<endl;
+        cout<<"\t\t\tSelect your Identity\n\n"<<endl;
+        cout<<"\t\t\t1) Administrator\n"<<endl;
+        cout<<"\t\t\t2) Costumer\n"<<endl;
+        cout<<"\t\t\t3) Exit\n\n\n"<<endl;
         int choice;
         cin>>choice;
         switch (choice) { 
@@ -187,7 +187,7 @@ class supermarket{
                 break;
 
             case 2:
-                if(bool() == true){
+                if(guest() == true){
                     goto start;
                 }
                 break;
@@ -196,8 +196,8 @@ class supermarket{
                 exit(0);
 
             default:
-                cout<<"Invalid Selection"<<endl;
-                cout<<"Select again"<<endl;
+                cout<<"\t\t\tInvalid Selection\n"<<endl;
+                cout<<"\t\t\tSelect again\n\n"<<endl;
                 goto start;
         }
     }
@@ -208,20 +208,25 @@ class supermarket{
 
 
 bool supermarket :: administrator(){
-    cout<<"Login"<<endl;
-    cout<<"Email: ";
+    cout<<"\t\t\tLogin"<<endl;
+    cout<<"\t\t\tEmail: ";
     cin>>e;
-    cout<<"Password: ";
+    cout<<"\t\t\tPassword: ";
     cin>>p;
     a.login(e, p);
     if(a.verification(e, p) == true){
-        cout<<"Logged in Successfully!"<<endl;
+        cout<<"\t\t\tLogged in Successfully!\n\n"<<endl;
+        cout<<"\t\t\t\t\t\t____List of Items___"<<endl;
+        cout<<"\t\t\tCode\t\t\tname\t\t\tStock\t\t\tPrice\t\t\tDiscount"<<endl;
+        for(auto i:mp){
+            displayItem(i.first);
+        }
         option:
-        cout<<"Select one of the choices"<<endl;
-        cout<<"1) Add Item"<<endl;
-        cout<<"2) Modify Item"<<endl;
-        cout<<"3) Remove Item"<<endl;
-        cout<<"4) Exit"<<endl;
+        cout<<"\n\t\t\tSelect one of the choices"<<endl;
+        cout<<"\t\t\t1) Add Item"<<endl;
+        cout<<"\t\t\t2) Modify Item"<<endl;
+        cout<<"\t\t\t3) Remove Item"<<endl;
+        cout<<"\t\t\t4) Exit\n\n"<<endl;
         int option;
         cin>>option;
         switch(option){
@@ -232,7 +237,7 @@ bool supermarket :: administrator(){
                 a.modify();
                 break;
             case 3:
-                cout<<"Enter product code"<<endl;
+                cout<<"\t\t\tEnter product code"<<endl;
                 cin>>rc;
                 a.remove(rc);
                 break;
@@ -240,13 +245,13 @@ bool supermarket :: administrator(){
                 return false;
                 break;
             default:
-                cout<<"None of the options selected"<<endl;
+                cout<<"\t\t\tNone of the options selected"<<endl;
                 goto option;
         }
         goto option;
     }
     else{
-        cout<<"Invalid Credentials"<<endl;
+        cout<<"\t\t\tInvalid Credentials"<<endl;
         return false;
     }
     return true;
@@ -254,27 +259,27 @@ bool supermarket :: administrator(){
 
 
 bool supermarket :: guest(){
-    cout<<"Provide Customer Details"<<endl;
-                cout<<"Name: ";
+    cout<<"\t\t\tProvide Customer Details"<<endl;
+                cout<<"\t\t\tName: ";
                 cin>>cn;
-                cout<<"Age: ";
+                cout<<"\t\t\tAge: ";
                 cin>>ca;
-                cout<<"Mobile Number: ";
+                cout<<"\t\t\tMobile Number: ";
                 cin>>cmob;
-                cout<<"Address: ";
+                cout<<"\t\t\tAddress: ";
                 cin>>cadd;
                 cout<<"-------"<<endl;
                 
                 select:
-                cout<<"____List of Items___"<<endl;
+                cout<<"\t\t\t\t\t\t____List of Items___"<<endl;
                 cout<<"\t\t\tCode\t\t\tname\t\t\tStock\t\t\tPrice\t\t\tDiscount"<<endl;
                 for(auto i:mp){
                     displayItem(i.first);
                 }
-                cout<<"Select one of the Items by entering code"<<endl;
+                cout<<"\t\t\tSelect one of the Items by entering code"<<endl;
                 cin>>code;
                 if(mp.find(code) != mp.end()){
-                    cout<<"Enter quantity: ";
+                    cout<<"\t\t\tEnter quantity: ";
                     int quant;
                     cin>>quant;
                     if(quant<=mp[code].getStock()){
@@ -283,37 +288,37 @@ bool supermarket :: guest(){
                         
                         // -------------------------------STOCK update--------------------------------------
                         a.updateStock(mp[code].getStock()-quant, code);
-                        cout<<mp[code].getName()<<" added to your list"<<endl;
+                        cout<<"\t\t\t"<<mp[code].getName()<<" added to your list"<<endl;
                         check:
-                        cout<<"Press y to add more items\n Press n to remove item\n Press any other key to checkout"<<endl;
+                        cout<<"\t\t\tPress y to add more items\n Press n to remove item\n Press any other key to checkout"<<endl;
                         cin>>more;
                         if(more == 'y'){
                             goto select;
                         }
                         else if(more == 'n'){
-                            cout<<"Enter the code of item to be removed"<<endl;
+                            cout<<"\t\t\tEnter the code of item to be removed"<<endl;
                             cin>>ri;
                             id.removeItems(ri);
                             a.updateStock(mp[ri].getStock()+quant, ri);
-                            cout<<mp[ri].getName()<<" removed from your list"<<endl;
+                            cout<<"\t\t\t"<<mp[ri].getName()<<" removed from your list"<<endl;
                             goto check;
                         }
                         else{
                             //-----------------------CHECKOUT------------------------------------------------
-                            cout<<"Proceeding to checkout"<<endl;
+                            cout<<"\n\n\t\t\tProceeding to checkout\n\n"<<endl;
                             user.login(cn, ca, cmob, cadd, id);
                             user.printReciept();
                             return true;
                         }
                     }
                     else{
-                        cout<<"Sorry! this much quantity is not available."<<endl;
+                        cout<<"\t\t\tSorry! this much quantity is not available."<<endl;
                         goto select;
                     }
                 }
                 else{
-                    cout<<"Invalid Selection"<<endl;
-                    cout<<"Select again"<<endl;
+                    cout<<"\t\t\tInvalid Selection"<<endl;
+                    cout<<"\t\t\tSelect again\n\n"<<endl;
                     goto select;
                 }
 }
@@ -326,37 +331,42 @@ void admin :: add(){
     float p;
     float d;
     add:
-    cout<<"Enter product code"<<endl;
+    cout<<"\t\t\tEnter product code: ";
     cin>>c;
     auto it = mp.find(c);
     if(it != mp.end()){
-        cout<<"Product is already added"<<endl;
+        cout<<"\t\t\tProduct is already added"<<endl;
         cout<<"\t\t\tCode\ttname\t\tStock\t\tPrice\t\tDiscount"<<endl;
         displayItem(it->first);
-        cout<<"If you want to modify this item press y"<<endl;
+        cout<<"\n\t\t\tIf you want to modify this item press y"<<endl;
         char y;
         cin>>y;
         if(y == 'y'){
             modify();
         }
         else{
-            cout<<"Operation terminated"<<endl;
-            cout<<"Enter another product"<<endl;
+            cout<<"\t\t\tOperation terminated"<<endl;
+            cout<<"\t\t\tEnter another product"<<endl;
             goto add;
         }
     }
-    cout<<"Enter product name"<<endl;
+    cout<<"\t\t\tEnter product name: ";
     cin>>n;
-    cout<<"Enter product stock"<<endl;
+    cout<<"\t\t\tEnter product stock: ";
     cin>>s;
-    cout<<"Enter product price"<<endl;
+    cout<<"\t\t\tEnter product price: ";
     cin>>p;
-    cout<<"Enter product discount"<<endl;
+    cout<<"\t\t\tEnter product discount: ";
     cin>>d;
     item i;
     i.setItem(c, n, s, p, d);
     mp[c]=i;
-    cout<<"Item is added"<<endl;
+    cout<<"\t\t\tItem is added"<<endl;
+    cout<<"\t\t\t\t\t\t____List of Items___"<<endl;
+    cout<<"\t\t\tCode\t\t\tname\t\t\tStock\t\t\tPrice\t\t\tDiscount"<<endl;
+    for(auto i:mp){
+        displayItem(i.first);
+    }
 } 
 
 void admin :: modify(){
@@ -365,61 +375,69 @@ void admin :: modify(){
     int s; 
     float p;
     float d;
-    cout<<"Enter product code"<<endl;
+    cout<<"\t\t\tEnter product code"<<endl;
     cin>>c;
     auto it = mp.find(c);
     if(it != mp.end()){
+        cout<<"\t\t\tCode\t\t\tname\t\t\tStock\t\t\tPrice\t\t\tDiscount"<<endl;
+        displayItem(c);
+        cout<<endl;
         again:
-        cout<<"What do you want to modify?"<<endl;
-        cout<<" 1) Name of product"<<endl;
-        cout<<" 2) Stock of product"<<endl;
-        cout<<" 3) Price of product"<<endl;
-        cout<<" 4) Discount of product"<<endl;
-        cout<<"Press any other key to exit"<<endl;
-        cout<<"Enter your choice ";
+        cout<<"\t\t\tWhat do you want to modify?"<<endl;
+        cout<<"\t\t\t 2) Stock of product"<<endl;
+        cout<<"\t\t\t 1) Name of product"<<endl;
+        cout<<"\t\t\t 3) Price of product"<<endl;
+        cout<<"\t\t\t 4) Discount of product"<<endl;
+        cout<<"\t\t\tPress any other key to exit"<<endl;
+        cout<<"\t\t\tEnter your choice: ";
         int choice;
         cin>>choice;
         switch(choice){
             case 1:
-                cout<<"Enter Name"<<endl;
+                cout<<"\t\t\tEnter Name: ";
                 cin>>n;
                 it->second.setName(n);
-                cout<<"Name is modified"<<endl;
+                cout<<"\t\t\tName is modified: ";
                 break;
              case 2:
-                cout<<"Enter Stock"<<endl;
+                cout<<"\t\t\tEnter Stock: ";
                 cin>>s;
                 it->second.setStock(s);
-                cout<<"Stock is modified"<<endl;
+                cout<<"\t\t\tStock is modified"<<endl;
                 break;
              case 3:
-                cout<<"Enter Price"<<endl;
+                cout<<"\t\t\tEnter Price: ";
                 cin>>p;
                 it->second.setPrice(p);
-                cout<<"Price is modified"<<endl;
+                cout<<"\t\t\tPrice is modified"<<endl;
                 break;
              case 4:
-                cout<<"Enter Discount"<<endl;
+                cout<<"\t\t\tEnter Discount: ";
                 cin>>d;
                 it->second.setDiscount(d);
-                cout<<"Discount is modified"<<endl;
+                cout<<"\t\t\tDiscount is modified"<<endl;
                 break;
             default:
-                cout<<"Invalid selection"<<endl;
+                cout<<"\n\t\t\tInvalid selection\n"<<endl;
                 return;
+        }
+        cout<<"\t\t\t\t\t\t____List of Items___"<<endl;
+        cout<<"\t\t\tCode\t\t\tname\t\t\tStock\t\t\tPrice\t\t\tDiscount"<<endl;
+        for(auto i:mp){
+            displayItem(i.first);
         }
         goto again;
     }
     else{
-        cout<<"No such product exist"<<endl;
-        cout<<"If you want to add this item press y"<<endl;
+        cout<<"\t\t\tNo such product exist"<<endl;
+        cout<<"\t\t\tIf you want to add this item press y"<<endl;
         char y;
         cin>>y;
         if(y == 'y'){
             add();
         }
         else{
-            cout<<"Operation terminated"<<endl;
+            cout<<"\t\t\tOperation terminated"<<endl;
         }
     }
 }
@@ -435,11 +453,16 @@ void admin :: remove(int c){
     auto it = mp.find(c);
     if(it != mp.end()){
         mp.erase(it);
-        cout<<"Product is removed"<<endl;
+        cout<<"\t\t\tProduct is removed\n"<<endl;
+        cout<<"\t\t\t\t\t\t____List of Items___"<<endl;
+        cout<<"\t\t\tCode\t\t\tname\t\t\tStock\t\t\tPrice\t\t\tDiscount"<<endl;
+        for(auto i:mp){
+            displayItem(i.first);
+        }
     }
     else{
-        cout<<"No such product exist"<<endl;
-        cout<<"Operation terminated"<<endl;
+        cout<<"\t\t\tNo such product exist"<<endl;
+        cout<<"\t\t\tOperation terminated\n"<<endl;
     }
 }
 
@@ -447,20 +470,21 @@ void admin :: remove(int c){
 void customer :: printReciept(){
     float total = 0;
     float amount = 0;
-    cout<<"-------------------RECIEPT-----------------------"<<endl;
-    cout<<"Name: "<<name<<endl;
-    cout<<"Age: "<<age<<endl;
-    cout<<"Mobile Number: "<<num<<endl;
-    cout<<"Address: "<<address<<endl<<endl;
+    cout<<"\t\t\t\t\t\t-------------------RECIEPT-----------------------"<<endl;
+    cout<<"\t\t\tName: "<<name<<endl;
+    cout<<"\t\t\tAge: "<<age<<endl;
+    cout<<"\t\t\tMobile Number: "<<num<<endl;
+    cout<<"\t\t\tAddress: "<<address<<endl<<endl;
     cout<<"\t\tCode\t\tname\t\t\tPrice\t\tDiscount\t\tQuantity\t\tAmount"<<endl;
     list<pair<int, int>> temp = getOrder().items;
     for(auto i : temp){
         amount = calculate(i.first, i.second);
         total+=amount;
-        cout<<"\t\t"<<i.first<<"\t\t\t"<<mp[i.first].getName()<<"\t\t\t"<<mp[i.first].getPrice()<<"\t\t\t"<<mp[i.first].getDiscount()<<"\t\t\t"<<i.second<<"\t\t\t"<<amount<<endl;
+        cout<<"\t\t"<<i.first<<"\t\t"<<mp[i.first].getName()<<"\t\t\t"<<mp[i.first].getPrice()<<"\t\t"<<mp[i.first].getDiscount()<<"\t\t\t"<<i.second<<"\t\t\t"<<amount<<endl;
     }
-    cout<<"\tTotal Amount:\t\t\t\t\t\t\t\t\t"<<total<<endl;
-    cout<<"ThankYou for shopping from us!"<<endl;
+
+    cout<<"\n\n\t\tTotal Amount:\t\t\t\t\t\t\t\t\t\t\t\tRs. "<<total<<endl;
+    cout<<"\n\t\t\t\t\t\tThankYou for shopping from us!\n"<<endl;
 }
 
 
@@ -480,12 +504,12 @@ int main(){
     mp[1]=i1;                              
     i2.setItem(2, "Pen", 5, 40, 7.5);     
     mp[2]=i2;      
-    customer cust;
-    order ord;
-    ord.addItems(1, 2);
-    ord.addItems(2, 2);
-    cust.login("sud", 34, "34566", "hhdf", ord);   
-    cust.printReciept();            
+    // customer cust;
+    // order ord;
+    // ord.addItems(1, 2);
+    // ord.addItems(2, 2);
+    // cust.login("sud", 34, "34566", "hhdf", ord);   
+    // cust.printReciept();            
     supermarket sp;
     sp.display();
 
